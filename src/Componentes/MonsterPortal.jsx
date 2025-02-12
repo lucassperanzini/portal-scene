@@ -8,7 +8,7 @@ import { Text } from "@react-three/drei"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 
-export function MonsterPortal({active,setActive,children, texture,name,colorText,fonte ='./font.ttf', ...props}) {
+export function MonsterPortal({hovered,setHover,active,setActive,children, texture,name,colorText,fonte ='./font.ttf', ...props}) {
 
   const map = useTexture(texture)
   const portalMaterial = useRef()
@@ -21,7 +21,7 @@ export function MonsterPortal({active,setActive,children, texture,name,colorText
       gsap.to(portalMaterial.current, {
         blend: worldActive ? 1 : 0,
         duration: 0.5,
-        ease: "linear",
+        ease: "power1.out",
       });
     }
   
@@ -29,8 +29,9 @@ export function MonsterPortal({active,setActive,children, texture,name,colorText
 
 
   return (
-    <group {...props}>
-    <RoundedBox name={name} onDoubleClick={()=>setActive(active === name? null : name )} args={[2,3,0.1]}>
+    <group  {...props}  >
+    <Text font={fonte} color={colorText} fontSize={0.4} position-z={0.051} position-y={-1.3}>{name}</Text>
+    <RoundedBox name={name} onPointerEnter={()=>setHover(name)} onPointerLeave={()=>setHover(null)} onDoubleClick={()=>setActive(active === name? null : name )} args={[2,3,0.1]}>
          
        <MeshPortalMaterial ref={portalMaterial} side={DoubleSide}  >
           {children}
@@ -38,7 +39,6 @@ export function MonsterPortal({active,setActive,children, texture,name,colorText
           <ambientLight intensity={2.5}/>
           <Sphere Envtexture={map}  scale={6}/>
        </MeshPortalMaterial>
-       <Text font={fonte} color={colorText} fontSize={0.4} position-z={0.01} position-y={-1.3}>{name}</Text>
     </RoundedBox>
 
     </group>
