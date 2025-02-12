@@ -3,18 +3,20 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 import { useEffect } from 'react'
 
 
-export default function Frog(props) {
+export default function Frog({hovered,...props}) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF('./models/Frog.gltf')
   const { actions } = useAnimations(animations, group)
 
 
   useEffect(() => {
-      actions.Idle.reset().fadeIn(0.5).play()
+
+      const anim = hovered? 'Weapon':'Idle'
+      actions[anim].reset().fadeIn(0.5).play()
   
-      return() => actions['Idle'].fadeOut(0.5)
+      return() => actions[anim].fadeOut(0.5)
       
-    }, [actions])
+    }, [hovered])
 
   return (
     <group ref={group} {...props} dispose={null}>
