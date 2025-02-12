@@ -1,5 +1,4 @@
 import { useTexture } from "@react-three/drei"
-import { texture } from "three/tsl"
 import { RoundedBox } from "@react-three/drei"
 import { MeshPortalMaterial } from "@react-three/drei"
 import { Environment } from "@react-three/drei"
@@ -7,8 +6,6 @@ import Sphere from "./sphere"
 import { DoubleSide } from 'three';
 import { Text } from "@react-three/drei"
 import { useEffect, useRef } from "react"
-import { useFrame } from "@react-three/fiber"
-import { easing } from "maath"
 import gsap from "gsap"
 
 export function MonsterPortal({active,setActive,children, texture,name,colorText,fonte ='./font.ttf', ...props}) {
@@ -33,8 +30,8 @@ export function MonsterPortal({active,setActive,children, texture,name,colorText
 
   return (
     <group {...props}>
-    <RoundedBox onDoubleClick={()=>setActive(active === name? null : name )} args={[2,3,0.1]}>
-          <planeGeometry args={[2,3]} />
+    <RoundedBox name={name} onDoubleClick={()=>setActive(active === name? null : name )} args={[2,3,0.1]}>
+         
        <MeshPortalMaterial ref={portalMaterial} side={DoubleSide}  >
           {children}
           <Environment preset='sunset'></Environment>
