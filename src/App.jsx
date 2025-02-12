@@ -1,23 +1,50 @@
 
 import './App.css'
-import { Canvas } from "@react-three/fiber";
-import {OrbitControls} from '@react-three/drei'
+import {useThree } from "@react-three/fiber";
+import {CameraControls, OrbitControls} from '@react-three/drei'
 import { Environment } from '@react-three/drei';
 import { Alien } from './Componentes/Alien';
 import Frog from './Componentes/Frog';
 import { MonsterPortal } from './Componentes/MonsterPortal';
 import Orc from './Componentes/Orc';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRef } from 'react';
+import * as THREE from 'three'
 
-function App({canvasSize}) {
+function App() {
 
 const [active,setActive] = useState(null)
+const controlsRef = useRef()
+const {scene, camera} = useThree()
+
+
+useEffect(() => {
+   if(active){
+
+      const targetPosition = new THREE.Vector3()
+     const p = scene.getObjectByName(active).getWorldPosition(targetPosition)
+     
+
+   }
+   // console.log(position)
+   // gsap.to(portalMaterial.current, {
+   //    blend: worldActive ? 1 : 0,
+   //    duration: 0.5,
+   //    ease: "linear",
+   //  });
+
+
+
+  
+ }, [active]);
+ 
 
 return(
 <>
-<Canvas camera={{position:[0,0,10], fov:30}}  style={{width:canvasSize + '%', height:'100vh'}} >
+
 <Environment preset='sunset'></Environment>
 <ambientLight intensity={1}/>
+<CameraControls></CameraControls>
 
    <MonsterPortal active={active} setActive={setActive} colorText={'#803286'} rotation-y={Math.PI / 8}  name='Alien' position-x={-3}texture={'./image.webp'}>
       <Alien position-y={-1} scale={0.6}></Alien>
@@ -31,9 +58,8 @@ return(
       <Orc position-y={-1} scale={0.6}></Orc>
    </MonsterPortal>
  
-<OrbitControls></OrbitControls>
 
-</Canvas>
+
 </>
 
 )
