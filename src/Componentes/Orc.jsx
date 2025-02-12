@@ -9,24 +9,44 @@ import { SkeletonUtils } from 'three-stdlib'
 import { useEffect } from 'react'
 import { Clone } from '@react-three/drei'
 
-export default function Orc(props) {
+
+export default function Orc({hovered,...props}) {
   const group = useRef()
-  const { scene, animations } = useGLTF('/models/Orc.gltf')
+  const { scene, animations, nodes , materials } = useGLTF('/models/Orc.gltf')
   const { actions } = useAnimations(animations, group)
 
-
   useEffect(() => {
-    console.log(scene)
-      actions.Idle.reset().fadeIn(0.5).play()
+    console.log("Ações disponíveis:", actions);
+
+      const anim = hovered? 'Weapon':'Idle'
+      actions[anim].reset().fadeIn(0.5).play()
   
-      return() => actions['Idle'].fadeOut(0.5)
+      return() => actions[anim].fadeOut(0.5)
       
-    }, [actions])
+    }, [hovered])
   
   return (
     <group ref={group} {...props} dispose={null}>
-      <Clone object={scene}></Clone>
+      <group name="Scene">
+        <group name="CharacterArmature">
+          <skinnedMesh
+            name="Orc"
+            geometry={nodes.Orc.geometry}
+            material={materials.Atlas}
+            skeleton={nodes.Orc.skeleton}
+          />
+          <skinnedMesh
+            name="Orc_Weapon"
+            geometry={nodes.Orc_Weapon.geometry}
+            material={materials.Atlas}
+            skeleton={nodes.Orc_Weapon.skeleton}
+          />
+          <primitive object={nodes.Root} />
+        </group>
+      </group>
     </group>
+
+  
   )
 }
 
